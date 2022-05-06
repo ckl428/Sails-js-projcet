@@ -1,0 +1,201 @@
+<!--create.ejs-->
+
+<form action="/qpon/create" onsubmit="triggerAlert()"  id="frmCreate" method="POST">
+
+  
+  <div class="columns">
+    <div class="column is-half">
+      <!--first part-->
+      <div class="column">
+        <div class="column">
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <input class="input" type="text" name="title" required>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="column">
+          <label class="label">Restaurant</label>
+          <div class="control">
+            <input class="input" type="text" name="restaurant" required>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label">Region</label>
+                <div class="control">
+                  <div class="select">
+                    <select name="region" onchange="regSelected(this.value)" required>
+                      <option value="">Select Region</option>
+                      <option value="HK Island">HK Island</option>
+                      <option value="Kowloon">Kowloon</option>
+                      <option value="New Territories">New Territories</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="field">
+                <label class="label">Mall</label>
+                <div class="control">
+                  <div class="select">
+                    <select id="mall" name="mall" disabled required></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <label class="label">Image</label>
+          <div class="control">
+            <input class="input" type="url" name="image" id="image" required>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+    <!--first part-->
+
+    <div class="column is-half ">
+      <!--second part-->
+
+      <div class="column">
+        <div class="column">
+          <div class="columns">
+            <div class="column is-half">
+              <label class="label">Quota</label>
+              <div class="control">
+                <input class="input" type="number" name="quota" min="0" required>
+              </div>
+            </div>
+            <div class="column">
+              <label class="label">Coins</label>
+              <div class="control">
+                <input class="input" type="number" name="coins" min="0" required>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="column">
+          <label class="label">Expiry Date</label>
+          <div class="control">
+            <input class="input" type="date" name="date" min="1900-01-01" max="2099-01-01" required>
+          </div>
+        </div>
+        <div class="column">
+          <label class="label">Detail</label>
+          <div class="field">
+            <div class="control">
+              <textarea class="textarea" name="detail" placeholder="" required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <div class="control">
+              <button class="button is-link" type="submit" id="submit">Submit</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!--second part-->
+  </div>
+  <!--full part of create-->
+  <script>
+     
+    var hk = ["IFC Mall", "Pacific Place", "Times Square"];
+    var kl = ["Elements", "Harbour City", "Festival Walk", "MegaBox", "APM"];
+    var nt = ["New Town Plaza", "Tsuen Wan Plaza"];
+    
+    
+    
+    function regSelected(selectedMall) {
+      var mallElem = document.getElementById("mall");
+      mallElem.options.length = 0;
+      if (selectedMall == "HK Island") {
+        hk.forEach(function (item) {
+          var option = document.createElement("option");
+          option.text = item;
+          option.value = item;
+          mallElem.add(option);
+        });
+        mallElem.disabled = false;
+      } else if (selectedMall == "Kowloon") {
+        kl.forEach(function (item) {
+          var option = document.createElement("option");
+          option.text = item;
+          option.value = item;
+          mallElem.add(option);
+        });
+        mallElem.disabled = false;
+      } else if (selectedMall == "New Territories") {
+        nt.forEach(function (item) {
+          var option = document.createElement("option");
+          option.text = item;
+          option.value = item;
+          mallElem.add(option);
+        });
+        mallElem.disabled = false;
+      } else
+        mallElem.disabled = true;
+    }
+    function triggerAlert() {
+      alert("Create qpon successfully")
+    }
+  </script>
+  <script>
+    var welcome = document.getElementById("welcome")
+  var login = document.getElementById('login').style.display = 'none';
+  var create = document.getElementById("create")
+  var admin = document.getElementById("admin")
+  var myredeem = document.getElementById("myredeem")
+  var username = "<%=user%>"
+
+
+
+  if(username ==""){
+      var login = document.getElementById('login').style.display = 'visible';
+      var logout = document.getElementById('btnLogout').style.display = 'none';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+  }
+  else{
+     welcome.innerHTML = "Welcome " + username + "&nbsp"
+     var login = document.getElementById('login').style.display = 'none';
+     var logout = document.getElementById('btnLogout').style.display = 'visible';
+     myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+   if("<%= userData[0].role %>"=="admin"){
+      myredeem.style.display = 'none'
+      create.style.display = 'visible'
+      admin.style.display = 'visible'
+   }
+   if("<%= userData[0].role %>"=="member"){
+      myredeem.style.display = 'visible'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+   }
+  }
+
+
+  </script>
+</form>

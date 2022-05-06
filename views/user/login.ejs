@@ -1,0 +1,89 @@
+
+<form action="/user/login" method="POST" onsubmit="submitForm(this);return false">
+  <div class="field">
+    <p class="control has-icons-left has-icons-right">
+      <input class="input" type="text" placeholder="Username" name="username">
+      <span class="icon is-small is-left">
+        <i class="fas fa-user"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control has-icons-left">
+      <input class="input" type="password" placeholder="Password" name="password">
+      <span class="icon is-small is-left">
+        <i class="fas fa-lock"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control">
+      <button class="button is-success">
+        Login
+      </button>
+    </p>
+  </div>
+</form>
+<script>
+
+  var welcome = document.getElementById("welcome")
+  var login = document.getElementById("login") 
+ 
+  //document.getElementById('login').style.display = 'none';
+  
+
+  
+  async function submitForm(formElem) {
+      //alert(formElem.action)
+      var response = await fetch(formElem.action, {
+          method: formElem.method,
+          body: new FormData(formElem),      
+      });
+      //alert(formElem)
+      if (response.ok) {
+          location.reload(true);
+          var user = await response.json();
+          alert("Login Success");
+          alert("Welcome back, " + user.username + " ("+user.role+")");
+          location.assign("/")
+          
+      } else if (response.status == 401) {
+          var msg = await response.json();
+          alert(msg);
+      } else {
+          alert(response.statusText);
+      }
+      
+  };
+</script>
+<script>
+   var create = document.getElementById("create")
+  var admin = document.getElementById("admin")
+  var myredeem = document.getElementById("myredeem")
+  var username = "<%=user%>"
+  
+  if(username ==""){
+      var login = document.getElementById('login').style.display = 'visible';
+      var logout = document.getElementById('btnLogout').style.display = 'none';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+  }
+  else{
+     welcome.innerHTML = "Welcome " + username + "&nbsp"
+     var login = document.getElementById('login').style.display = 'none';
+     var logout = document.getElementById('btnLogout').style.display = 'visible';
+     myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+   if("<%= userData[0].role %>"=="admin"){
+      myredeem.style.display = 'none'
+      create.style.display = 'visible'
+      admin.style.display = 'visible'
+   }
+   if("<%= userData[0].role %>"=="member"){
+      myredeem.style.display = 'visible'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+   }
+
+  }
+</script>

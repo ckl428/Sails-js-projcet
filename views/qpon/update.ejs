@@ -1,0 +1,299 @@
+
+
+
+<!--<form action="/qpon/update/<%= qpon.id %>" id="frmUpdate" method="post" onsubmit="clickUpdate()">-->
+
+
+
+  <div class="columns">
+    <div class="column is-half">
+      <!--first part-->
+      <div class="column">
+        <div class="column">
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <input class="input" type="text"   id="title" name="title" value="<%= qpon.title%> "  required>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="column">
+          <label class="label">Restaurant</label>
+          <div class="control">
+            <input class="input" type="text" id="restaurant" name="restaurant" value="<%= qpon.restaurant%>" required>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label">Region</label>
+                <div class="control">
+                  <div class="select">
+                    <select name="region" id="regionSelect"  onchange="regSelected(this.value)" required>
+                      <!--<option value=""></option>!-->
+
+                      <option value="HK Island">HK Island</option>
+                      <option value="Kowloon">Kowloon</option>
+                      <option value="New Territories">New Territories</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="field">
+                <label class="label">Mall</label>
+                <div class="control">
+                  <div class="select">
+                    <select id="mall" name="mall" required disabled>Mall</select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <label class="label">Image</label>
+          <div class="control">
+            <input class="input" type="url" id="image" name="image" value="<%= qpon.image%>" required>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+    <!--first part-->
+
+    <div class="column is-half ">
+      <!--second part-->
+
+      <div class="column">
+        <div class="column">
+          <div class="columns">
+            <div class="column is-half">
+              <label class="label">Quota</label>
+              <div class="control">
+                <input class="input" type="number" id="quota" name="quota" value="<%= qpon.quota%>" min="0" required>
+              </div>
+            </div>
+            <div class="column">
+              <label class="label">Coins</label>
+              <div class="control">
+                <input class="input" type="number" id="coins" name="coins" value="<%= qpon.coins%>" min="0" required>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="column">
+          <label class="label">Expiry Date</label>
+          <div class="control">
+            <input class="input" type="date" id="date" name="date" value="<%= qpon.date%>" placeholder="<%= qpon.date%>"
+              min="1900-01-01" max="2099-01-01" required>
+          </div>
+        </div>
+        <div class="column">
+          <label class="label">Detail</label>
+          <div class="field">
+            <div class="control">
+              <textarea class="textarea" id="detail" name="detail" placeholder="" value="<%= qpon.detail%>"
+                required><%= qpon.detail%></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <div class="control">
+              <button class="button is-link" input type="submit" id="btnUpdate"  required onclick="updateQpon('<%= qpon.id%>')">Submit</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!--second part-->
+  </div>
+  <!--full part of create-->
+
+
+  <script>
+    var hk = ["IFC Mall", "Pacific Place", "Times Square"];
+    var kl = ["Elements", "Harbour City", "Festival Walk", "MegaBox", "APM"];
+    var nt = ["New Town Plaza", "Tsuen Wan Plaza"];
+    var regOptions = document.getElementById("regionSelect").options; //previous region
+    var regOptionsMall = document.getElementById("mall").options; //previous mall
+    var frmUpdate = document.getElementById("frmUpdate");
+    //alert("<%= qpon.region%>");
+    var btnUpdate = document.getElementById("btnUpdate")
+  
+    for (var i = 0; i < regOptions.length; i++) { //get previous region
+      if (regOptions[i].text == "<%= qpon.region%>") {
+        regOptions[i].selected = true;
+        regSelected(regOptions[i].text)
+        break;
+      }
+    }
+    for (var i = 0; i < regOptionsMall.length; i++) { //get previous mall
+      if (regOptionsMall[i].text == "<%= qpon.mall%>") {
+        regOptionsMall[i].selected = true;
+        break;
+      }
+    }
+    function regSelected(selectedMall) {
+      var mallElem = document.getElementById("mall");
+      mallElem.options.length = 0;
+      if (selectedMall == "HK Island") {
+        hk.forEach(function (item) {
+          var option = document.createElement("option");
+          option.text = item;
+          option.value = item;
+          mallElem.add(option);
+        });
+        mallElem.disabled = false;
+      } else if (selectedMall == "Kowloon") {
+        kl.forEach(function (item) {
+          var option = document.createElement("option");
+          option.text = item;
+          option.value = item;
+          mallElem.add(option);
+        });
+        mallElem.disabled = false;
+      } else if (selectedMall == "New Territories") {
+        nt.forEach(function (item) {
+          var option = document.createElement("option");
+          option.text = item;
+          option.value = item;
+          mallElem.add(option);
+        });
+        mallElem.disabled = false;
+      } else
+        mallElem.disabled = true;
+    }
+  </script>
+
+<!--</form>-->
+
+<script>
+  
+  async function updateQpon(id) {
+    var r = confirm("Confirm Update?");
+   
+    titleQuery = "&title="+ document.getElementById("title").value
+    restaurantQuery = "&restaurant="+ document.getElementById("restaurant").value
+    regionQuery = "&region="+ document.getElementById("regionSelect").value
+    mallQuery = "&mall="+ document.getElementById("mall").value
+    imageQuery = "&image="+ document.getElementById("image").value
+    quotaQuery = "&quota="+ document.getElementById("quota").value
+    coinsQuery = "&coins="+ document.getElementById("coins").value
+    dateQuery = "&date="+ document.getElementById("date").value
+    detailQuery = "&detailQuery="+ document.getElementById("detail").value
+
+    var queryArray = [document.getElementById("title").value,
+    document.getElementById("restaurant").value,
+    document.getElementById("regionSelect").value,
+    document.getElementById("mall").value,
+    document.getElementById("image").value, 
+    document.getElementById("quota").value,
+    document.getElementById("coins").value,
+    document.getElementById("date").value,
+    document.getElementById("detail").value]
+    
+    for(var i = 0; i<queryArray.length; i++){
+      if(queryArray[i]==""){
+        alert("You should input all data before update!")
+        return;
+      }
+    }
+    if (r) {
+        var response = await fetch("/qpon/"+id+"?"+titleQuery+restaurantQuery+regionQuery+mallQuery+imageQuery+quotaQuery+coinsQuery+dateQuery+detailQuery, {
+            method: "PUT"
+        });
+
+        if (response.ok) {
+          alert("Qpon updated.");
+          location.assign("http://localhost:1337/qpon/list");
+        } else {
+            alert(response.status + ": " + response.statusText);
+        }
+
+    } else {
+        alert("cancelled");
+    }
+  };
+
+</script>
+
+  <script>
+    var create = document.getElementById("create")
+    var admin = document.getElementById("admin")
+    var myredeem = document.getElementById("myredeem")
+    var username = "<%=user%>"
+
+    if (username == "") {
+      var login = document.getElementById('login').style.display = 'visible';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+    } else {
+      welcome.innerHTML = "Welcome " + username + "&nbsp"
+      var login = document.getElementById('login').style.display = 'none';
+      myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+      if ("<%= userData[0].role %>" == "admin") {
+        myredeem.style.display = 'none'
+        create.style.display = 'visible'
+        admin.style.display = 'visible'
+      }
+      if ("<%= userData[0].role %>" == "member") {
+        myredeem.style.display = 'visible'
+        create.style.display = 'none'
+        admin.style.display = 'none'
+      }
+
+    }
+  </script>
+
+
+<div class="field">
+  <div class="control">
+    <div class="column">
+      <div class="column">
+        <button  class="button is-danger" id="btnDel"
+          onclick="deleteQpon('<%= qpon.id %>')">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script>
+      async function deleteQpon(id) {
+        var r = confirm("Confirm Delete?");
+        
+        if (r) {
+          var response = await fetch("/qpon/" + id, {
+          method: "DELETE",
+          });
+
+            if (response.ok) {
+              alert("Qpon deleted.");
+              location.assign("http://localhost:1337/qpon/list");
+            } else {
+                alert(response.status + ": " + response.statusText);
+            }
+
+        } else {
+            alert("cancelled");
+        }
+    };
+  </script>
+
+    
+ 

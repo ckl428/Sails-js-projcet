@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QPon</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+</head>
+<style>
+</style>
+
+<body>
+  
+
+  <div class="columns">
+
+    <div class="column">
+      <div class="column">
+        <h2><b>HK Island</b></h2>
+      </div>
+      <% var cName = "column" %>
+      <% for(var i = 0, hki=0; i < qpons.length; i++) { %>
+      <% if(qpons[i].region=="HK Island"){ %>
+      <%hki++%>
+      <% if(hki>1){ %>
+      <% cName = "column is-hidden-mobile" %>
+      <% } %>
+      <% if(hki>2){ %>
+      <% cName = "column is-hidden" %>
+      <% } %>
+      <div class="<%=cName%>">
+        <img src="<%= qpons[i].image %>" class="image is-fullwidth">
+        <div class="column card">
+          <b><a href="http://localhost:1337/qpon/read/<%= qpons[i].id %>"><%= qpons[i].restaurant %></a></b>
+          <br>
+          <small><%= qpons[i].title %></small>
+          <p></p>
+          <br>
+          <small>Coins: <%= qpons[i].coins %></small>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+    </div>
+    <div class="column">
+      <div class="column">
+        <h2><b>Kowloon</b></h2>
+      </div>
+      <% var cName = "column" %>
+      <% for(var i = 0, kli=0; i < qpons.length; i++) { %>
+      <% if(qpons[i].region=="Kowloon"){ %>
+      <%kli++%>
+      <% if(kli>1){ %>
+      <% cName = "column is-hidden-mobile" %>
+      <% } %>
+      <% if(kli>2){ %>
+      <% cName = "column is-hidden" %>
+      <% } %>
+      <div class="<%=cName%>">
+        <img src="<%= qpons[i].image %>" class="image is-fullwidth">
+        <div class="column card">
+          <b><a href="http://localhost:1337/qpon/read/<%= qpons[i].id %>"><%= qpons[i].restaurant %></a></b>
+          <br>
+          <small><%= qpons[i].title %></small>
+          <p></p>
+          <br>
+          <small>Coins: <%= qpons[i].coins %></small>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+    </div>
+
+    <div class="column">
+      <div class="column">
+        <h2><b>New Territories</b></h2>
+      </div>
+
+      <% var cName = "column" %>
+      <% for(var i = 0, nti=0; i < qpons.length; i++) { %>
+      <% if(qpons[i].region=="New Territories"){ %>
+      <%nti++%>
+      <% if(nti>1){ %>
+      <% cName = "column is-hidden-mobile" %>
+      <% } %>
+      <% if(nti>2){ %>
+      <% cName = "column is-hidden" %>
+      <% } %>
+      <div class="<%=cName%>">
+        <img src="<%= qpons[i].image %>" class="image is-fullwidth">
+        <div class="column card">
+          <b><a href="http://localhost:1337/qpon/read/<%= qpons[i].id %>"><%= qpons[i].restaurant %></a></b>
+          <br>
+          <small><%= qpons[i].title %></small>
+          <p></p>
+          <br>
+          <small>Coins: <%= qpons[i].coins %></small>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+    </div>
+  </div>
+  </div>
+
+
+
+
+</body>
+<script>
+  var create = document.getElementById("create")
+  var admin = document.getElementById("admin")
+  var myredeem = document.getElementById("myredeem")
+  var username = "<%=user%>"
+  
+  if(username ==""){
+      var login = document.getElementById('login').style.display = 'visible';
+      var logout = document.getElementById('btnLogout').style.display = 'none';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+  }
+  else{
+     welcome.innerHTML = "Welcome " + username + "&nbsp"
+     var login = document.getElementById('login').style.display = 'none';
+     var logout = document.getElementById('btnLogout').style.display = 'visible';
+     myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+   if("<%= userData[0].role %>"=="admin"){
+      myredeem.style.display = 'none'
+      create.style.display = 'visible'
+      admin.style.display = 'visible'
+   }
+   if("<%= userData[0].role %>"=="member"){
+      myredeem.style.display = 'visible'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+   }
+
+  }
+
+  
+</script>
+
+</html>

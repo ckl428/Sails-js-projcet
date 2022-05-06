@@ -1,0 +1,76 @@
+
+<table class="table is-bordered is-striped is-hoverable is-fullwidth">
+    <div class="columns is-5by3">
+    <div class="column">
+    <div class="column" id="d1"><b>Redeemed Coupons: </b></div>
+    </div>
+    <div class="column"><b>Current Balance: </b><%= redeemUser.coins %> </div>
+
+    </div>
+  <div class="columns">
+    <% var cName = "column is-one-third" %>
+    <% var rLength = redeemUser.redeem.length%>
+        <% for(var i = 0,j=0; i < redeemUser.redeem.length; i++) { %>
+        <%j++%>
+        <% if(j>1){ %>
+        <% cName = "column is-hidden-mobile is-one-third" %>
+        <% } %>
+        <% if(j>3){ %>
+        <% cName = "column is-hidden" %>
+        <% } %>
+       <div class="<%=cName%>">
+           <div class="column">
+        <img src="<%= redeemUser.redeem[i].image %>" class="image is-fullwidth">
+        <div class="column card">
+          <b><a href="http://localhost:1337/qpon/read/<%= redeemUser.redeem[i].id %>"><%= redeemUser.redeem[i].restaurant %></a></b>
+          <br>
+          <small><%= redeemUser.redeem[i].title %></small>
+          <p></p>
+          <br>
+          <small>Expiry Date: <%= redeemUser.redeem[i].date %></small>
+        </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+    
+
+  <script>
+  var create = document.getElementById("create")
+  var admin = document.getElementById("admin")
+  var myredeem = document.getElementById("myredeem")
+  var username = "<%=user%>"
+  var rLength = "<%=rLength%>"
+  var d1 = document.getElementById("d1")
+  if(rLength==0)
+  d1.innerHTML = "<b>You're not redeeming any coupons.</b>"
+  
+  
+  
+  if(username ==""){
+      var login = document.getElementById('login').style.display = 'visible';
+      var logout = document.getElementById('btnLogout').style.display = 'none';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+  }
+  else{
+     welcome.innerHTML = "Welcome " + username + "&nbsp"
+     var login = document.getElementById('login').style.display = 'none';
+     var logout = document.getElementById('btnLogout').style.display = 'visible';
+     myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+   if("<%= userData[0].role %>"=="admin"){
+      myredeem.style.display = 'none'
+      create.style.display = 'visible'
+      admin.style.display = 'visible'
+   }
+   if("<%= userData[0].role %>"=="member"){
+      myredeem.style.display = 'visible'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+   }
+
+  }
+  </script>
+  </table>
+  

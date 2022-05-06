@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>New Sails App</title>
+
+  <!-- Viewport mobile tag for sensible mobile support 
+   
+    <%/* If you want to discourage search engines from indexing this site, uncomment the following line: */%>
+    <%/* <meta name="robots" content="noindex"> */%>
+    -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta charset="utf-8">
+  <title>QPon</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+</head>
+
+<body>
+  
+  <body>
+    
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="http://localhost:1337/">
+          <img src="https://i.imgur.com/kHTFJjJ.png" href="http://localhost:1337/" class="image is-256x256">
+        </a>
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+      
+            <a class="navbar-item " href="http://localhost:1337/" >
+              Home
+            </a>
+      
+            <a class="navbar-item" href="http://localhost:1337/qpon/search" >
+              Search
+            </a>
+      
+            <a class="navbar-item" href="http://localhost:1337/qpon/create" id="create">
+              Create
+            </a>
+      
+            <a class="navbar-item" href="http://localhost:1337/qpon/" id="admin">
+              Admin
+            </a>
+            <a class="navbar-item" href="" id="myredeem">
+              My Redeemed Coupons
+            </a>
+          </div>
+          
+          </div>
+        </div>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div id="welcome">
+             
+            </div>
+            <div class="buttons">
+              <a class="button is-light" href="http://localhost:1337/user/login" id="login" >
+                Log in
+              </a>
+              <form action="" method="POST" id="logout">
+              <button class="button is-light" input type="submit" id="btnLogout" onclick="goLogout()">
+                Logout
+              </button>
+              </form>
+              <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"
+              onclick="dropDownNav()">
+              <span aria-none="true"></span>
+              <span aria-none="true"></span>
+              <span aria-none="true"></span>
+            </a>
+            </div>
+            </div>
+          </div>
+      </nav>
+      <section class="hero">
+        <div class="hero-body">
+          <div class="column">
+            <h1 class="title">
+              Q-Pon
+            </h1>
+            <h2 class="subtitle">
+              Redeem your coins for dining coupons
+            </h2>
+          </div>
+        </div>
+        </div>
+       
+      </section>
+
+        
+      </div>
+
+    <%- body %>
+
+    <script>
+      var navBar = document.getElementById('navbarBasicExample');
+      var i = 0;
+      var logout = document.getElementById('logout')
+      
+      function goLogout(){
+      alert("Logout successful")
+      logout.action = "user/logout"
+      }
+
+
+      function dropDownNav() {
+
+        if (i % 2 == 0) {
+          navBar.className = "navbar-menu is-active"
+          i++
+        } else {
+          navBar.className = "navbar-menu"
+          i = 0;
+        }
+      }
+
+    </script>
+
+
+  </body>
+
+</html>

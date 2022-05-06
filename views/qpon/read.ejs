@@ -1,0 +1,181 @@
+
+<form action="" method="POST" id="redeemForm">
+<table class="table is-bordered is-striped is-hoverable is-fullwidth">
+  
+
+  <div class="columns is-variable is-6">
+
+    <div class="column card is-two-thirds">
+      <div class="column">
+        <img src="<%= qpon.image %>" class="image is-256x256">
+      </div>
+      
+     
+     
+    </div>
+
+    <div class="column card">
+      
+      <div class="column">
+        <ul style="list-style-type: disc; ">
+          <li><b><%= qpon.restaurant %></b></li>
+          <li><b><%= qpon.title %></b></li>
+          <li><b>Coins:</b> <%= qpon.coins %></li>
+          <li><b>Address:</b> <%= qpon.mall %>, <%= qpon.region%></li>
+          <li><b>Expiry Date:</b> <%= qpon.date %></li>
+          <li><%= qpon.detail %></li>
+          
+          
+          <% var check = 0 %>
+          <% for(var i = 0; i < qRedeem.master.length; i++) { %>
+          <% if(user == qRedeem.master[i].username) {%>
+          <%check = 1 %>
+          <% } %>
+          <% } %> 
+         
+         
+        </ul>
+       
+      </div>
+
+      <button class="button is-link"  id="submitBtn" value="Submit" onclick="submitForm()">Redeem</button>
+
+       
+      
+      <br><br><br><br><br>
+      <button class="button is-danger"  id="cancelSubmitBtn" value="Submit" onclick="submitCancelForm()">Cancel Your Redeem</button>
+      
+      
+
+    </div>
+  </div>
+
+
+  <script>
+
+ 
+  var create = document.getElementById("create")
+  var admin = document.getElementById("admin")
+  var myredeem = document.getElementById("myredeem")
+  var username = "<%=user%>"
+  var check  = "<%=check%>"
+  var redeemForm = document.getElementById("redeemForm")
+ 
+  var submitBtn = document.getElementById("submitBtn")
+  var cancelSubmitBtn = document.getElementById("cancelSubmitBtn")
+  
+  if(check ==0){
+  submitBtn.style.display = 'visible'
+  cancelSubmitBtn.style.display = 'none'
+  }
+  if(check ==1){
+  submitBtn.style.display = 'none'
+  cancelSubmitBtn.style.display = 'visible'
+  }
+
+  var userCoin = "<%=userData[0].coins %>"
+  var qponCoin =  "<%=qpon.coins %>"
+  var qponQuota = "<%=qpon.quota %>"
+  
+  function submitForm(){
+    r = confirm("Are you sure to redeem this Qpon?")
+
+    if(r){
+    if(username!="")
+    redeemForm.action = "/user/<%=userData[0].id %>/redeem/add/<%=qpon.id %>";
+    else{
+    alert("Please login first")
+    redeemForm.action = "/";
+    return false;
+    }
+    
+    if("<%= userData[0].role %>"!="member" && username!=""){
+    alert("You are admin not member!")
+    }
+    else if(userCoin-qponCoin<0){
+    alert("You don't have enough coins")
+    }
+    else if(qponQuota<=0){
+    alert("Sorry, Qpon not enough quota")
+    }
+    else if(check==1){
+      alert("You can not redeem same Qpon!")
+    }
+    else{
+    alert("Redeem Qpon successfully!")
+    }
+    }
+
+    else{
+    alert("Request Cancel")
+    redeemForm.action = "/";
+    return false;
+    }
+  }
+  function submitCancelForm(){
+    r = confirm("Are you sure to cancel Qpon?")
+    
+    if(r){
+    if(username!="")
+    redeemForm.action = "/user/<%=userData[0].id %>/redeem/remove/<%=qpon.id %>";
+    else{
+    alert("Please login first")
+    redeemForm.action = "/";
+    return
+    }
+    if("<%= userData[0].role %>"!="member" && username!=""){
+    alert("You are admin not member")
+    return
+    }
+    else{
+    alert("Cancel Redeem Qpon successfully")
+    return
+    }
+   
+  }
+  else{
+    alert("Request Cancel")
+    redeemForm.action = "/";
+    return false;
+  }
+  }
+  if(username ==""){
+      var login = document.getElementById('login').style.display = 'visible';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+  }
+  else{
+     welcome.innerHTML = "Welcome " + username + "&nbsp"
+     var login = document.getElementById('login').style.display = 'none';
+     myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+   if("<%= userData[0].role %>"=="admin"){
+      myredeem.style.display = 'none'
+      create.style.display = 'visible'
+      admin.style.display = 'visible'
+   }
+   if("<%= userData[0].role %>"=="member"){
+      myredeem.style.display = 'visible'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+   }
+
+   
+
+  }
+
+     
+
+     
+        
+    
+     
+  
+
+  </script>
+
+
+
+</table>
+</form>
+

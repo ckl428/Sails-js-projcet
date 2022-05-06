@@ -1,0 +1,58 @@
+
+<table class="table is-bordered is-striped is-hoverable is-fullwidth">
+  
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Restaurant</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  <% qpons.forEach( function(qpon) { %>
+  <tr>
+    <% if(qpon.title!=""){ %>
+    <td><%= qpon.id %></td>
+    <td><%= qpon.title %></td>
+    <td><%= qpon.restaurant%></td>
+    <td><a href="http://localhost:1337/qpon/update/<%= qpon.id %>">Update</a></td>
+    <td><a href="http://localhost:1337/qpon/<%= qpon.id %>/master">Redeemed Members</a></td>
+  </tr>
+  <% } %>
+  <% }); %>
+
+
+
+</table>
+<script>
+  var create = document.getElementById("create")
+  var admin = document.getElementById("admin")
+  var myredeem = document.getElementById("myredeem")
+  var username = "<%=user%>"
+  
+  if(username ==""){
+      var login = document.getElementById('login').style.display = 'visible';
+      var logout = document.getElementById('btnLogout').style.display = 'none';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+  }
+  else{
+     welcome.innerHTML = "Welcome " + username + "&nbsp"
+     var login = document.getElementById('login').style.display = 'none';
+     var logout = document.getElementById('btnLogout').style.display = 'visible';
+     myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+   if("<%= userData[0].role %>"=="admin"){
+      myredeem.style.display = 'none'
+      create.style.display = 'visible'
+      admin.style.display = 'visible'
+   }
+   if("<%= userData[0].role %>"=="member"){
+      myredeem.style.display = 'visible'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+   }
+
+  }
+
+</script>

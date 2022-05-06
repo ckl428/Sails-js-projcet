@@ -1,0 +1,55 @@
+
+<table class="table is-bordered is-striped is-hoverable is-fullwidth">
+
+    <tr>
+      <th>Redeemer id</th>
+      <th>Redeemer name</th>
+    </tr>
+  
+    <% for(var i = 0, hki=0; i < qpon.master.length; i++) { %>
+    <tr>
+      
+      <td><%= qpon.master[i].id %></td>
+      <td><%= qpon.master[i].username %></td>
+    </tr>
+    <% } %>
+   
+  
+  
+  
+  </table>
+
+  <script>
+       var create = document.getElementById("create")
+  var admin = document.getElementById("admin")
+  var myredeem = document.getElementById("myredeem")
+  var username = "<%=user%>"
+  
+  if(username ==""){
+      var login = document.getElementById('login').style.display = 'visible';
+      var logout = document.getElementById('btnLogout').style.display = 'none';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+  }
+  else{
+     welcome.innerHTML = "Welcome " + username + "&nbsp"
+     var login = document.getElementById('login').style.display = 'none';
+     var logout = document.getElementById('btnLogout').style.display = 'visible';
+     myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+   if("<%= userData[0].role %>"=="admin"){
+      myredeem.style.display = 'none'
+      create.style.display = 'visible'
+      admin.style.display = 'visible'
+   }
+   if("<%= userData[0].role %>"=="member"){
+      myredeem.style.display = 'visible'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+   }
+
+  }
+
+
+  </script>
+  

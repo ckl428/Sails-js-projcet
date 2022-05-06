@@ -1,0 +1,264 @@
+
+
+    <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+      <div class="columns">
+        <div class="column">
+        <div id="p2" class="columns">
+
+        </div>
+      </div>
+        <div class="column is-two-fifths">
+          <div class="field">
+            <label class="label">Region</label>
+            <div class="control">
+              <div class="select">
+                <select name="region" id="region" onchange="getRegion();">
+                  <option value="">Not Specified</option>
+                  <option value="HK Island">HK Island</option>
+                  <option value="Kowloon">Kowloon</option>
+                  <option value="New Territories">New Territories</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <label class="label">Min Coin</label>
+          <div class="control">
+            <input class="input" type="number" id="mincoin" name="mincoin" min="0">
+          </div>
+
+          <label class="label">Max Coin</label>
+          <div class="control">
+            <input class="input" type="number" id="maxcoin" name="maxcoin" min="0">
+          </div>
+          <label class="label">Valid On</label>
+          <div class="control">
+            <input class="input" type="date" name="date" id="date">
+          </div>
+          <br>
+
+          <div class="field">
+            <div class="control">
+              <button class="button is-link" type="submit" id="submit" onclick="fetchPage(2,0)">Search</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="column">
+      <nav class="pagination" role="navigation" aria-label="pagination">
+        <button class="pagination-previous" id="previousButton" onclick="setPagination()">Previous</button>
+        <button class="pagination-next" id="nextButton" onclick="setPagination()">Next page</button>
+        
+        <ul class="pagination-list">
+          
+          <li>
+            <a class="pagination-link" id="firstLink" onclick="setPagination()">1</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" id="previousLink" onclick="setPagination()">45</a>
+          </li>
+          <li>
+            <a class="pagination-link is-current" id="currentLink" onclick="setPagination()">46</a>
+          </li>
+          <li>
+            <a class="pagination-link" id="nextLink" onclick="setPagination()">47</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" id="lastLink" onclick="setPagination()">86</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    </table>
+  </body>
+
+  <script>
+    function setPagination(limit, offset, num) {
+    var previousButton = document.getElementById("previousButton");
+    var nextButton = document.getElementById("nextButton");
+    var currentLink = document.getElementById("currentLink");
+    var previousLink = document.getElementById("previousLink");
+    var nextLink = document.getElementById("nextLink");
+    var firstLink = document.getElementById("firstLink");
+    var lastLink = document.getElementById("lastLink");
+    var numOfRecords = num;
+    var admin = document.getElementById("admin");
+
+    firstLink.onclick = function () {
+      fetchPage(limit, 0)
+    };
+    previousButton.onclick = function () {
+      fetchPage(limit, offset - limit)
+    };
+    previousLink.onclick = function () {
+      fetchPage(limit, offset - limit)
+    };
+    currentLink.onclick = function () {
+      fetchPage(limit, offset)
+    };
+    nextLink.onclick = function () {
+      fetchPage(limit, offset + limit)
+    };
+    nextButton.onclick = function () {
+      fetchPage(limit, offset + limit)
+    };
+    lastLink.onclick = function () {
+      fetchPage(limit, (Math.ceil(numOfRecords / limit) - 1) * limit)
+    };
+    var currentPageNumber = Math.floor(offset / limit) + 1;
+    previousLink.innerHTML = currentPageNumber - 1;
+    currentLink.innerHTML = currentPageNumber;
+    nextLink.innerHTML = currentPageNumber + 1;
+    lastLink.innerHTML = Math.ceil(numOfRecords / limit);
+    if (offset < limit) {
+      previousButton.setAttribute("disabled", true);
+      // previousButton.href = "";
+      previousLink.style.display = "none";
+    } else {
+      previousButton.removeAttribute("disabled");
+      previousLink.style.display = "block";
+    }
+    if (offset + limit >= numOfRecords) {
+      nextButton.setAttribute("disabled", true);
+      // nextButton.href = "";
+      nextLink.style.display = "none";
+    } else {
+      nextButton.removeAttribute("disabled");
+      nextLink.style.display = "block";
+    }
+    
+   
+  }
+  setPagination();
+  </script>
+  <script>
+  
+  var create = document.getElementById("create")
+  var admin = document.getElementById("admin")
+  var myredeem = document.getElementById("myredeem")
+  var username = "<%=user%>"
+  if(username ==""){
+      var login = document.getElementById('login').style.display = 'visible';
+      var logout = document.getElementById('btnLogout').style.display = 'none';
+      myredeem.style.display = 'none'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+  }
+  else{
+     welcome.innerHTML = "Welcome " + username + "&nbsp"
+     var login = document.getElementById('login').style.display = 'none';
+     var logout = document.getElementById('btnLogout').style.display = 'visible';
+     myredeem.href = "http://localhost:1337/user/<%= userData[0].id %>/redeem";
+   if("<%= userData[0].role %>"=="admin"){
+      myredeem.style.display = 'none'
+      create.style.display = 'visible'
+      admin.style.display = 'visible'
+   }
+   if("<%= userData[0].role %>"=="member"){
+      myredeem.style.display = 'visible'
+      create.style.display = 'none'
+      admin.style.display = 'none'
+   }
+
+  }
+
+  </script>
+
+  
+  <script>
+    
+    var mincoin = document.getElementById('mincoin')
+    var maxcoin = document.getElementById('maxcoin')
+    var date = document.getElementById('date')
+    var region = document.getElementById('region');
+    function getRegion(){
+      return region = document.getElementById('region').value
+    }
+  
+    async function fetchPage(limit, offset) { //ajax function 
+      region = getRegion();
+      if (region)
+        var rSearch = "&region="+region
+      else
+        var rSearch = ""
+      if (mincoin.value)
+        var minSearch = "&mincoin="+mincoin.value
+      else
+        var minSearch = ""
+      if (maxcoin.value)
+        var maxSearch = "&maxcoin="+maxcoin.value
+      else
+        var maxSearch = ""
+      if (date.value) {
+        var dateSearch = "&date=" + date.value
+      } else {
+        var dateSearch = ''
+      }
+      var searchQuery = rSearch + minSearch + maxSearch + dateSearch;
+      
+      var limitQuery = "&limit=" + limit;
+      var offsetQuery = "&offset=" + offset
+      
+      var response = await fetch("/qpon/search?" + searchQuery+ limitQuery+ offsetQuery);
+      if (response.ok) {
+        var qpons = await response.json();
+        numOfRecords = qpons[0].count
+        //alert(numOfRecords)
+        var cName = '<div class = "column">'
+        
+        var dynamicCode ="";
+           
+          for(var i = 0, j=0; i<qpons.length; i++){
+          j++
+          if(j>1)
+          cName = '<div class = "column is-hidden-mobile">'
+          dynamicCode += 
+          cName
+          +'<div class = "column">' 
+          +'<img src = '  + qpons[i].image + ' class="image is-256x256"' +'>'
+          + '<div class="column card">'
+          + '<b><a href= ' + 'http://localhost:1337/qpon/read/'+qpons[i].id + '>' + qpons[i].restaurant +'</a></b>'
+          +'<br>'
+          +'<small>' + qpons[i].title+'</small>'
+          +'<p></p>'
+          +'<br>'
+          +'<small>' + "Coins: " + qpons[i].coins +'</small>'       
+          +'</div>'
+          +'</div>' 
+          +'</div>'       
+          }
+          
+        document.querySelector("#p2").innerHTML = dynamicCode
+      var screenwidth = window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+      if (screenwidth <= 768) { //current limit = 2
+        
+        limit = 1;
+        //setPagination(limit, offset,numOfRecords)
+      }
+      if (screenwidth > 768) {  //current limit = 1
+       
+        limit = 2;
+        //setPagination(limit, offset,numOfRecords)
+      }
+
+        
+        setPagination(limit, offset,numOfRecords)
+      } else {
+        alert(response.status + ": " + response.statusText);
+      }
+    };
+    fetchPage(2, 0);
+  
+  </script>
+
+</table>
